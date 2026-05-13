@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as RepairsRouteImport } from './routes/repairs'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProductsRouteImport } from './routes/products'
@@ -19,11 +20,20 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as R13AdminRouteImport } from './routes/13Admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as ShopRepairsRouteImport } from './routes/shop.repairs'
+import { Route as ShopOrdersRouteImport } from './routes/shop.orders'
+import { Route as ShopInventoryRouteImport } from './routes/shop.inventory'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RepairsRoute = RepairsRouteImport.update({
@@ -71,6 +81,26 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ShopRoute,
+} as any)
+const ShopRepairsRoute = ShopRepairsRouteImport.update({
+  id: '/repairs',
+  path: '/repairs',
+  getParentRoute: () => ShopRoute,
+} as any)
+const ShopOrdersRoute = ShopOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => ShopRoute,
+} as any)
+const ShopInventoryRoute = ShopInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => ShopRoute,
+} as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -87,8 +117,13 @@ export interface FileRoutesByFullPath {
   '/products': typeof ProductsRouteWithChildren
   '/profile': typeof ProfileRoute
   '/repairs': typeof RepairsRoute
+  '/shop': typeof ShopRouteWithChildren
   '/signup': typeof SignupRoute
   '/products/$id': typeof ProductsIdRoute
+  '/shop/inventory': typeof ShopInventoryRoute
+  '/shop/orders': typeof ShopOrdersRoute
+  '/shop/repairs': typeof ShopRepairsRoute
+  '/shop/': typeof ShopIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +137,10 @@ export interface FileRoutesByTo {
   '/repairs': typeof RepairsRoute
   '/signup': typeof SignupRoute
   '/products/$id': typeof ProductsIdRoute
+  '/shop/inventory': typeof ShopInventoryRoute
+  '/shop/orders': typeof ShopOrdersRoute
+  '/shop/repairs': typeof ShopRepairsRoute
+  '/shop': typeof ShopIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,8 +153,13 @@ export interface FileRoutesById {
   '/products': typeof ProductsRouteWithChildren
   '/profile': typeof ProfileRoute
   '/repairs': typeof RepairsRoute
+  '/shop': typeof ShopRouteWithChildren
   '/signup': typeof SignupRoute
   '/products/$id': typeof ProductsIdRoute
+  '/shop/inventory': typeof ShopInventoryRoute
+  '/shop/orders': typeof ShopOrdersRoute
+  '/shop/repairs': typeof ShopRepairsRoute
+  '/shop/': typeof ShopIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,8 +173,13 @@ export interface FileRouteTypes {
     | '/products'
     | '/profile'
     | '/repairs'
+    | '/shop'
     | '/signup'
     | '/products/$id'
+    | '/shop/inventory'
+    | '/shop/orders'
+    | '/shop/repairs'
+    | '/shop/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +193,10 @@ export interface FileRouteTypes {
     | '/repairs'
     | '/signup'
     | '/products/$id'
+    | '/shop/inventory'
+    | '/shop/orders'
+    | '/shop/repairs'
+    | '/shop'
   id:
     | '__root__'
     | '/'
@@ -155,8 +208,13 @@ export interface FileRouteTypes {
     | '/products'
     | '/profile'
     | '/repairs'
+    | '/shop'
     | '/signup'
     | '/products/$id'
+    | '/shop/inventory'
+    | '/shop/orders'
+    | '/shop/repairs'
+    | '/shop/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -169,6 +227,7 @@ export interface RootRouteChildren {
   ProductsRoute: typeof ProductsRouteWithChildren
   ProfileRoute: typeof ProfileRoute
   RepairsRoute: typeof RepairsRoute
+  ShopRoute: typeof ShopRouteWithChildren
   SignupRoute: typeof SignupRoute
 }
 
@@ -179,6 +238,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/repairs': {
@@ -244,6 +310,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof ShopRoute
+    }
+    '/shop/repairs': {
+      id: '/shop/repairs'
+      path: '/repairs'
+      fullPath: '/shop/repairs'
+      preLoaderRoute: typeof ShopRepairsRouteImport
+      parentRoute: typeof ShopRoute
+    }
+    '/shop/orders': {
+      id: '/shop/orders'
+      path: '/orders'
+      fullPath: '/shop/orders'
+      preLoaderRoute: typeof ShopOrdersRouteImport
+      parentRoute: typeof ShopRoute
+    }
+    '/shop/inventory': {
+      id: '/shop/inventory'
+      path: '/inventory'
+      fullPath: '/shop/inventory'
+      preLoaderRoute: typeof ShopInventoryRouteImport
+      parentRoute: typeof ShopRoute
+    }
     '/products/$id': {
       id: '/products/$id'
       path: '/$id'
@@ -266,6 +360,22 @@ const ProductsRouteWithChildren = ProductsRoute._addFileChildren(
   ProductsRouteChildren,
 )
 
+interface ShopRouteChildren {
+  ShopInventoryRoute: typeof ShopInventoryRoute
+  ShopOrdersRoute: typeof ShopOrdersRoute
+  ShopRepairsRoute: typeof ShopRepairsRoute
+  ShopIndexRoute: typeof ShopIndexRoute
+}
+
+const ShopRouteChildren: ShopRouteChildren = {
+  ShopInventoryRoute: ShopInventoryRoute,
+  ShopOrdersRoute: ShopOrdersRoute,
+  ShopRepairsRoute: ShopRepairsRoute,
+  ShopIndexRoute: ShopIndexRoute,
+}
+
+const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   R13AdminRoute: R13AdminRoute,
@@ -276,6 +386,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsRoute: ProductsRouteWithChildren,
   ProfileRoute: ProfileRoute,
   RepairsRoute: RepairsRoute,
+  ShopRoute: ShopRouteWithChildren,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport

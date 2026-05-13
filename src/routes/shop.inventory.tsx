@@ -53,7 +53,7 @@ function ShopInventory() {
     load();
   };
 
-  const updateRow = async (id: string, patch: Partial<InvRow>) => {
+  const updateRow = async (id: string, patch: { quantity?: number; shop_price?: number }) => {
     await supabase.from("inventory").update(patch).eq("id", id);
     load();
   };
