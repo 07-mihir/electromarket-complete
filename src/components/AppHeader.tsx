@@ -1,7 +1,8 @@
+import { useEffect, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useAuth, primaryRole, homeForRole } from "@/lib/auth";
+import { useAuth, primaryRole, homeForRole, type Role } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Zap, ShoppingCart, Wrench, User as UserIcon, LogOut, LayoutDashboard } from "lucide-react";
+import { Zap, ShoppingCart, Wrench, User as UserIcon, LogOut } from "lucide-react";
 
 export function AppHeader() {
   const { user, roles, signOut } = useAuth();
@@ -59,7 +60,7 @@ export function AppHeader() {
   );
 }
 
-export function RequireRole({ role, children }: { role: Role | Role[]; children: React.ReactNode }) {
+export function RequireRole({ role, children }: { role: Role | Role[]; children: ReactNode }) {
   const { user, roles, loading } = useAuth();
   const navigate = useNavigate();
   const allowed = Array.isArray(role) ? role : [role];
@@ -71,12 +72,19 @@ export function RequireRole({ role, children }: { role: Role | Role[]; children:
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, roles, loading]);
-  if (loading || !user) {
-    return <div className="p-8 text-center text-muted-foreground">Loading…</div>;
-  }
+  if (loading || !user) return <div className="p-8 text-center text-muted-foreground">Loading…</div>;
   if (!allowed.some((r) => roles.includes(r))) return null;
   return <>{children}</>;
 }
 
-import { useEffect } from "react";
-import type { Role } from "@/lib/auth";
+export function PageShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <AppHeader />
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 py-8">{children}</main>
+      <footer className="border-t py-6 text-center text-xs text-muted-foreground">
+        © {new Date().getFullYear()} ElectroMarket — Electronics, made local.
+      </footer>
+    </div>
+  );
+}
